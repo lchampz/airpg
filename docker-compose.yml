@@ -1,0 +1,57 @@
+name: airpg
+
+services:
+  nats:
+    image: nats:2-alpine
+    ports:
+      - "4222:4222"
+
+  # Ollama NÃO é containerizado de propósito: usa o Ollama nativo do host
+  # (Ollama.app / `ollama serve`), evitando duplicar o download dos modelos
+  # e evitando conflito de porta com o app já instalado. O LiteLLM alcança o
+  # host via `host.docker.internal` (ver litellm.docker.config.yaml).
+  litellm:
+    image: ghcr.io/berriai/litellm:main-stable
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./litellm.docker.config.yaml:/app/config.yaml:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  airpg-engine:
+    build: ./airpg-engine
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: "sqlite:///app/data/airpg.db?mode=rwc"
+      NATS_URL: "nats://nats:4222"
+      LITELLM_URL: "http://litellm:4000"
+      LITELLM_API_KEY: "sk-airpg-local-dev"
+      LITELLM_MODEL: "airpg-local"
+      RUST_LOG: "info"
+    volumes:
+      - airpg_engine_data:/app/data
+    depends_on:
+      - nats
+      - litellm
+
+  airpg-world:
+    build: ./airpg-world
+    environment:
+      NATS_URL: "nats://nats:4222"
+    depends_on:
+      - nats
+
+  airpg-frontend:
+    build: ./airpg-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_ENGINE_URL: "http://localhost:8080"
+    depends_on:
+      - airpg-engine
+
+volumes:
+  airpg_engine_data:
