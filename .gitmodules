@@ -1,0 +1,9 @@
+[submodule "airpg-engine"]
+	path = airpg-engine
+	url = https://github.com/lchampz/airpg-engine.git
+[submodule "airpg-world"]
+	path = airpg-world
+	url = https://github.com/lchampz/airpg-world.git
+[submodule "airpg-frontend"]
+	path = airpg-frontend
+	url = https://github.com/lchampz/airpg-frontend.git
