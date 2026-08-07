@@ -63,8 +63,14 @@ services:
     build: ./airpg-world
     environment:
       NATS_URL: "nats://nats:4222"
+      LITELLM_URL: "http://litellm:4000"
+      LITELLM_API_KEY: "1234"
+      LITELLM_MODEL: "airpg-local"
+      AIRPG_ENGINE_URL: "http://airpg-engine:8080"
     depends_on:
       - nats
+      - litellm
+      - airpg-engine
 
   airpg-frontend:
     build: ./airpg-frontend
