@@ -51,7 +51,7 @@ services:
       NATS_URL: "nats://nats:4222"
       LITELLM_URL: "http://litellm:4000"
       LITELLM_API_KEY: "1234"
-      LITELLM_MODEL: "airpg-local"
+      LITELLM_MODEL: "airpg-pool-gratis"
       RUST_LOG: "info"
     volumes:
       - airpg_engine_data:/app/data
@@ -65,7 +65,7 @@ services:
       NATS_URL: "nats://nats:4222"
       LITELLM_URL: "http://litellm:4000"
       LITELLM_API_KEY: "1234"
-      LITELLM_MODEL: "airpg-local"
+      LITELLM_MODEL: "airpg-pool-gratis"
       AIRPG_ENGINE_URL: "http://airpg-engine:8080"
     depends_on:
       - nats
