@@ -75,6 +75,8 @@ cd airpg-frontend && npm install && npm run dev
 
 A documentação completa (camadas, eventos, fluxo de turno, decisões técnicas e sua justificativa) vive no vault Obsidian do projeto — arquitetura, guardrails, modelo de agentes, catálogo de eventos, e o registro de todas as decisões técnicas tomadas (`Stack-Escolhida`, `Benchmark-Linguagens`, `Decisoes-Resolvidas`).
 
+**Roadmap de lançamento**: a pasta `07-OpenSpec` do vault documenta, no modelo OpenSpec, o que falta para soltar o AIRPG para usuários reais (ver `Roadmap-Lancamento`) — inclui bloqueadores críticos ainda não resolvidos (sessões multiusuário, provedor de LLM de produção).
+
 ## Status
 
 Testado ponta a ponta (local e via Docker):
@@ -82,6 +84,7 @@ Testado ponta a ponta (local e via Docker):
 - Guardrail de Saída real (segunda chamada de LLM, veredito estruturado em JSON)
 - **Persistência de mudança de estado**: o LLM propõe (dano/cura, itens), o engine valida contra whitelist + bounds (HP nunca sai de `[0, máximo]`, item precisa existir para ser removido) e persiste no SQLite — confirmado que o estado sobrevive entre requisições (dano num turno, cura persistida no próximo) e que diálogo comum não gera mudança nenhuma (sem alucinação de efeito mecânico)
 - Mundo Vivo (Elixir/OTP): NPC autônomo detecta colisão com o jogador **na borda** (não repete a cada tick — bug encontrado e corrigido em teste), publica no NATS, engine assume a interação reativa, e devolve `interacao_finalizada` para o NPC retomar autonomia
+- **Frontend com identidade visual real** (design system Terra — ver `Change-Design-System-Terra` no vault): chat com bolhas por origem, chips de mudança de estado, indicador de carregamento durante a latência real do LLM, bottom nav shell para as próximas telas
 - Stack inteira reproduzível via `docker compose up`
 
-Ainda não implementado: Guardrail de Entrada não consulta o Estado Rígido para validar viabilidade mecânica da ação, sem detecção de combate para ordem de iniciativa sequencial, e reidratação dos NPCs autônomos do Mundo Vivo entre reinícios do container.
+Ainda não implementado: Guardrail de Entrada não consulta o Estado Rígido para validar viabilidade mecânica da ação, sem detecção de combate para ordem de iniciativa sequencial, reidratação dos NPCs autônomos do Mundo Vivo entre reinícios do container, e os bloqueadores de lançamento documentados em `Roadmap-Lancamento` (sessões multiusuário, provedor de LLM de produção, telas secundárias).
