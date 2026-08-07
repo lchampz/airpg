@@ -6,6 +6,20 @@ services:
     ports:
       - "4222:4222"
 
+  # Postgres só para a Admin UI do LiteLLM (login, gestão de chaves, logs de
+  # request/response) — o proxy de modelos em si funciona sem banco, mas a UI
+  # de login exige um DB conectado (senão: "Authentication Error, Not
+  # connected to DB!"). Não é o banco do jogo — esse continua sendo o SQLite
+  # do airpg-engine.
+  litellm-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: litellm
+      POSTGRES_PASSWORD: litellm
+      POSTGRES_DB: litellm
+    volumes:
+      - litellm_db_data:/var/lib/postgresql/data
+
   # Ollama NÃO é containerizado de propósito: usa o Ollama nativo do host
   # (Ollama.app / `ollama serve`), evitando duplicar o download dos modelos
   # e evitando conflito de porta com o app já instalado. O LiteLLM alcança o
@@ -17,8 +31,16 @@ services:
       - "4000:4000"
     volumes:
       - ./litellm.docker.config.yaml:/app/config.yaml:ro
+    environment:
+      UI_USERNAME: "airpg"
+      UI_PASSWORD: "airpg"
+      LITELLM_MASTER_KEY: "1234"
+      DATABASE_URL: "postgresql://litellm:litellm@litellm-db:5432/litellm"
+      STORE_MODEL_IN_DB: "True"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - litellm-db
 
   airpg-engine:
     build: ./airpg-engine
@@ -28,7 +50,7 @@ services:
       DATABASE_URL: "sqlite:///app/data/airpg.db?mode=rwc"
       NATS_URL: "nats://nats:4222"
       LITELLM_URL: "http://litellm:4000"
-      LITELLM_API_KEY: "sk-airpg-local-dev"
+      LITELLM_API_KEY: "1234"
       LITELLM_MODEL: "airpg-local"
       RUST_LOG: "info"
     volumes:
@@ -55,3 +77,4 @@ services:
 
 volumes:
   airpg_engine_data:
+  litellm_db_data:
