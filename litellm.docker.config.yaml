@@ -3,9 +3,20 @@ model_list:
   # rejeição do Guardrail de Saída de 40%+ mesmo depois do fix de prompt
   # (Frente 1, Tarefas-Pendentes) — teto de qualidade do modelo, não bug de
   # código. llama3 (8B, já baixado localmente) validado como upgrade real.
+  #
+  # IMPORTANTE: `ollama_chat/`, não `ollama/`. O prefixo `ollama/` (sem
+  # "_chat") usa a API legada /api/generate do Ollama — completion de texto
+  # único, sem papéis — e o LiteLLM acha achatando todo o histórico
+  # (system+troca anteriores+turno atual) num blob de texto só. Isso
+  # confundia o modelo a tratar a conversa como um documento pra "analisar"
+  # em vez de responder em personagem (achado real em produção: NPCs
+  # pedindo "informação de debug" ao jogador, recitando o histórico
+  # inteiro). `ollama_chat/` usa /api/chat de verdade, com mensagens
+  # estruturadas por papel — resolve na raiz, não é limite de tamanho de
+  # histórico (que já era limitado a 3 trocas, ver db.rs::MAX_TROCAS_MEMORIA).
   - model_name: airpg-local
     litellm_params:
-      model: ollama/llama3
+      model: ollama_chat/llama3
       api_base: http://host.docker.internal:11434
 
 general_settings:
