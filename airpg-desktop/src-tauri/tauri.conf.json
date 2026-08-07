@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "airpg-desktop",
+  "version": "0.1.0",
+  "identifier": "com.airpg.desktop",
+  "build": {
+    "frontendDist": "../../airpg-frontend/dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm --prefix ../airpg-frontend run dev",
+    "beforeBuildCommand": "npm --prefix ../airpg-frontend run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "AIRPG",
+        "width": 1024,
+        "height": 768,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    },
+    "externalBin": ["binaries/airpg-engine"]
+  }
+}
