@@ -1,0 +1,9 @@
+# Ambiente virtual Python — recriar com `python3 -m venv .venv && pip install mlx-lm`
+.venv/
+
+# Adapters treinados (binários grandes, regeneráveis rodando o treino de novo)
+adapters_teste/
+adapters_producao/
+
+__pycache__/
+*.pyc
