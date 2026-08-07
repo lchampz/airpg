@@ -1,7 +1,11 @@
 model_list:
+  # Ver Change-RAG-SRD-e-Desktop, Fase 4: llama3.2 (3B) tinha taxa de
+  # rejeição do Guardrail de Saída de 40%+ mesmo depois do fix de prompt
+  # (Frente 1, Tarefas-Pendentes) — teto de qualidade do modelo, não bug de
+  # código. llama3 (8B, já baixado localmente) validado como upgrade real.
   - model_name: airpg-local
     litellm_params:
-      model: ollama/llama3.2
+      model: ollama/llama3
       api_base: http://host.docker.internal:11434
 
 general_settings:

@@ -1,7 +1,10 @@
 model_list:
+  # Ver Change-RAG-SRD-e-Desktop, Fase 4 — llama3.2 (3B) trocado por llama3
+  # (8B) depois de validação real de qualidade (menor taxa de rejeição do
+  # Guardrail de Saída, ver o Change no vault pros números).
   - model_name: airpg-local
     litellm_params:
-      model: ollama/llama3.2
+      model: ollama/llama3
       api_base: http://localhost:11434
 
 general_settings:
