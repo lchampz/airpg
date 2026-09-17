@@ -14,5 +14,29 @@ model_list:
       model: ollama_chat/llama3
       api_base: http://localhost:11434
 
+  # Pool de IAs gratuitas: mesmo model_name em 3 deployments -> LiteLLM
+  # faz load balancing/retry automático entre eles quando um falha ou
+  # bate o rate limit do free tier.
+  - model_name: airpg-pool-gratis
+    litellm_params:
+      model: gemini/gemini-2.0-flash-exp
+      api_key: os.environ/GEMINI_API_KEY
+  - model_name: airpg-pool-gratis
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+  - model_name: airpg-pool-gratis
+    litellm_params:
+      model: openrouter/meta-llama/llama-3.3-70b-instruct:free
+      api_key: os.environ/OPENROUTER_API_KEY
+
+  # PAGO — cobra por token. Não usar como padrão; só quando o usuário
+  # escolher explicitamente na tela de Configurações.
+  - model_name: claude-pago
+    litellm_params:
+      model: anthropic/claude-sonnet-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+      api_base: os.environ/ANTHROPIC_UPSTREAM
+
 general_settings:
   master_key: sk-airpg-local-dev

@@ -31,6 +31,8 @@ services:
       - "4000:4000"
     volumes:
       - ./litellm.docker.config.yaml:/app/config.yaml:ro
+    env_file:
+      - .env
     environment:
       UI_USERNAME: "airpg"
       UI_PASSWORD: "airpg"
